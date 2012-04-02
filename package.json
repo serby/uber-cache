@@ -1,0 +1,26 @@
+{
+	"author": "Paul Serby <paul@serby.net>",
+	"name": "uber-cache",
+	"description": "A simple caching module that can support any caching engine: Memory, Memcached, Redis, MongoDB",
+	"version": "0.0.1",
+	"tags": [
+		"cache",
+		"memory"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:serby/uber-cache"
+	},
+	"main": "uber-cache.js",
+	"scripts": {
+		"test": "mocha -r should"
+	},
+	"engines": {
+		"node": ">0.4.0"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"mocha": "*",
+		"should": "*"
+	}
+}
