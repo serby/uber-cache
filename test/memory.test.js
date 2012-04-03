@@ -1,6 +1,7 @@
 var should = require('should');
 
 describe('memory', function() {
+
   describe('#get()', function() {
     it('should return undefined for a key that has not been set', function() {
       var memory = require('../memory').createMemoryCache();
@@ -32,6 +33,7 @@ describe('memory', function() {
       }, 15);
     });
   });
+
   describe('#length()', function() {
     it('should return 0 before anything has been added to the cache', function() {
       var memory = require('../memory').createMemoryCache();
@@ -53,5 +55,21 @@ describe('memory', function() {
         done();
       }, 15);
     });
+
+    it('should not exceed cache size', function() {
+
+      var memory = require('../memory').createMemoryCache({ size: 3 });
+
+      memory.set('a', 'a');
+      memory.length().should.eql(1);
+      memory.set('b', 'b');
+      memory.length().should.eql(2);
+      memory.set('c', 'c');
+      memory.length().should.eql(3);
+      memory.set('d', 'd');
+      memory.length().should.eql(3);
+    });
+
   });
+
 });
