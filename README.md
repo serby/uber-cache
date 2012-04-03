@@ -1,6 +1,6 @@
 # Uber Cache - Simple caching module that can support any caching engine.
 
-[![build status](https://secure.travis-ci.org/serby/###.png)](http://travis-ci.org/serby/###)
+[![build status](https://secure.travis-ci.org/serby/uber-cache.png)](http://travis-ci.org/serby/uber-cache)
 
 ## Installation
 
