@@ -28,12 +28,12 @@ describe('memory', function() {
     });
     it('should return a value when within the TTL', function() {
       var memory = require('../memory').createMemoryCache();
-      memory.set('test', 'hello', 20);
+      memory.set('test', 'hello', 2);
       should.equal(memory.get('test'), 'hello');
     });
     it('should not return when TTL has been exceeded', function(done) {
       var memory = require('../memory').createMemoryCache();
-      memory.set('test', 'hello', 10);
+      memory.set('test', 'hello', 1);
       setTimeout(function() {
         should.equal(memory.get('test'), undefined);
         done();

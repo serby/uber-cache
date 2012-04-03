@@ -55,7 +55,7 @@ module.exports.createMemoryCache = function(options) {
       }
       var item =  { value: value, lru: lruId };
       if (ttl) {
-        item.expire = Date.now() + ttl;
+        item.expire = Date.now() + Math.round(ttl / 1000);
       }
       cache[key] = item;
       lru[lruId] = key;
