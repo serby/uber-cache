@@ -1,25 +1,33 @@
 var _ = require('underscore');
 
+// This simple hasher is quick, but no good for object arguments.
+// If you need a more advanced you can pass as an option.
+function hasher() {
+  return '_' + Array.prototype.slice.call(arguments).toString();
+}
+
 module.exports.createUberCache = function(options) {
 
-  var engine = options && options.engine || require('./memory').createMemoryCache(options)
-    , hasher = options && options.hasher || function (x) {
-        return x;
-    }
-    , funcCounter = 1;
+  options = _.extend({
+    engine: require('./memory').createMemoryCache(options),
+    hasher: hasher
+  }, options);
 
-  engine.memoize = function(fn, ttl) {
-    var key = '_func' + funcCounter;
+
+  var funcCounter = 1;
+
+  options.engine.memoize = function(fn, ttl) {
+    var fnKey = '_func' + funcCounter;
     return function() {
       var args = Array.prototype.slice.call(arguments)
         , callback = args.pop()
-        , key = hasher.apply(null, args)
-        , value = engine.get(key);
+        , key = fnKey + hasher.apply(null, args)
+        , value = options.engine.get(key);
 
       if (value === undefined) {
         args.push(function() {
           var args = Array.prototype.slice.call(arguments);
-          engine.set(key, args, ttl);
+          options.engine.set(key, args, ttl);
           callback.apply(null, args);
         });
         fn.apply(null, args);
@@ -29,5 +37,5 @@ module.exports.createUberCache = function(options) {
     };
   };
 
-  return engine;
+  return options.engine;
 };
