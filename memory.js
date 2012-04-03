@@ -62,11 +62,16 @@ module.exports.createMemoryCache = function(options) {
       lruId++;
       lruClean();
     },
-    get: function(key) {
+    get: function(key, callback) {
+      var response;
       if ((cache[key]) && ((cache[key].expire === undefined) || (cache[key].expire) && (cache[key].expire >= Date.now()))) {
-        return cache[key].value;
+        response = cache[key].value;
       }
-      return undefined;
+      if (typeof callback === 'function') {
+        callback(undefined, response);
+      } else {
+        return response;
+      }
     },
     del: del,
     clear: clear,

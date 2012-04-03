@@ -7,6 +7,13 @@ describe('memory', function() {
       var memory = require('../memory').createMemoryCache();
       should.equal(memory.get('test'), undefined);
     });
+    it('should return value via callback if provided', function() {
+      var memory = require('../memory').createMemoryCache();
+      memory.set('test', 'hello');
+      memory.get('test', function(error, value) {
+        value.should.eql('hello');
+      });
+    });
     it('should return value for a key that has been set', function() {
       var memory = require('../memory').createMemoryCache();
       memory.set('test', 'hello');
