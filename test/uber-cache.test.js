@@ -75,7 +75,7 @@ describe('uber-cache', function() {
         value.should.eql(5);
       });
 
-      cache.length().should.eql(2);
+      cache.length.should.eql(2);
 
     });
   });
