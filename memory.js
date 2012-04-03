@@ -16,12 +16,18 @@ module.exports.createMemoryCache = function(options) {
     lru = Object.create(null);
   }
 
+  function del(key) {
+    if (cache[key]) {
+      delete lru[cache[key].lru];
+      delete cache[key];
+    }
+  }
+
   function garbageCollection() {
     Object.keys(cache).forEach(function(key) {
       var item = cache[key];
       if (item.expire < Date.now()) {
-        delete lru[cache[key].lru];
-        delete cache[key];
+        del(key);
       }
     });
   }
@@ -43,7 +49,8 @@ module.exports.createMemoryCache = function(options) {
 
   return {
     set: function(key, value, ttl) {
-      if (key === undefined) {
+
+      if (typeof key === 'undefined') {
         throw new Error('Invalid key undefined');
       }
       var item =  { value: value, lru: lruId };
@@ -61,12 +68,9 @@ module.exports.createMemoryCache = function(options) {
       }
       return undefined;
     },
-    del: function(key) {
-      delete cache[key];
-      delete lru[cache[key].lru];
-    },
+    del: del,
     clear: clear,
-    length: function() {
+    get length() {
       return Object.keys(cache).length;
     },
     dump: function() {
