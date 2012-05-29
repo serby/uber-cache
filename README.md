@@ -9,7 +9,7 @@
 ## Usage
 
 ## Credits
-[Paul Serby](https://github.com/serby/) follow me on [twitter](http://twitter.com/PabloSerbo)
+[Paul Serby](https://github.com/serby/) follow me on [twitter](http://twitter.com/serby)
 
 ## Licence
 Licenced under the [New BSD License](http://opensource.org/licenses/bsd-license.php)
