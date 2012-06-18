@@ -1,4 +1,4 @@
-# Uber Cache - Callback based caching module that can support any caching engine.
+# Uber Cache - Async based caching module that can support any caching engine.
 
 [![build status](https://secure.travis-ci.org/serby/uber-cache.png)](http://travis-ci.org/serby/uber-cache)
 
@@ -12,6 +12,26 @@ Uber cache also comes with a synchronous interface which supports TTL and LRU bu
       npm install uber-cache
 
 ## Usage
+
+### Asynchronous Interface
+
+Most of the useful caching engines have a async interface due to the evented IO required so it is necessary to use a callback style when manipulating the cache.
+
+```js
+
+var ttlInSeconds = 1
+  , someData = { some: 'data' }
+  ;
+
+cache.set('some-key', someData, ttlInSeconds, function(error, cachedItem) {
+  if (error) {
+    // Had the error
+    return false;
+  }
+
+  console.log('Cache written key:' + cachedItem.key + ' value:' + cachedItem.value);
+});
+```
 
 ## Engines
 Uber Cache engines are decoupled from the main project. Unlike other modules that force you to install dependencies for things you not going to use, Uber Cache engines are self contained modules that you also include into your project and pass to Uber Cache on instantiation.
