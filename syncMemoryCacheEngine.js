@@ -1,14 +1,14 @@
 var _ = require('underscore');
 
-module.exports.createMemoryCache = function(options) {
+module.exports.createSyncMemoryCacheEngine = function(options) {
 
   var cache
     , lru
     , lruId = 0;
 
   options = _.extend({
-    gcInterval: 30000,
-    size: 1000 // Maximum number of items that can be held in the LRU cache.
+    gcInterval: 30000, // How often GC happens
+    size: 1000 // Maximum number of items that can be held in the LRU cache by default.
   }, options);
 
   function clear() {
@@ -62,20 +62,17 @@ module.exports.createMemoryCache = function(options) {
       lruId++;
       lruClean();
     },
-    get: function(key, callback) {
+    get: function(key) {
       var response;
       if ((cache[key]) && ((cache[key].expire === undefined) || (cache[key].expire) && (cache[key].expire >= Date.now()))) {
         response = cache[key].value;
       }
-      if (typeof callback === 'function') {
-        callback(undefined, response);
-      } else {
-        return response;
-      }
+      return response;
     },
     del: del,
     clear: clear,
-    get length() {
+    size: function() {
+      garbageCollection();
       return Object.keys(cache).length;
     },
     dump: function() {

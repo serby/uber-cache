@@ -15,7 +15,7 @@ describe('uber-cache', function() {
 
     it('should create a function that is cached on first run', function(done) {
 
-      var cache = require('../uber-cache').createUberCache()
+      var cache = require('../uber-cache').createUberCache({ engine: require('uber-cache-redis') })
         , fn = cache.memoize(function(callback) {
         callback(10);
       }, 1000);

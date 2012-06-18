@@ -8,13 +8,13 @@ function hasher() {
 
 module.exports.createUberCache = function(options) {
 
+  var funcCounter = 1;
+
   options = _.extend({
-    engine: require('./memory').createMemoryCache(options),
     hasher: hasher
   }, options);
 
-
-  var funcCounter = 1;
+  options.engine = options.engine || require('./memoryCacheEngine').createMemoryCacheEngine(options);
 
   options.engine.memoize = function(fn, ttl) {
     var fnKey = '_func' + funcCounter;
@@ -37,5 +37,12 @@ module.exports.createUberCache = function(options) {
     };
   };
 
-  return options.engine;
+  return {
+    get: options.engine.get,
+    set: options.engine.set,
+    del: options.engine.del,
+    clear: options.engine.clear,
+    size: options.engine.size,
+    dump: options.engine.dump
+  };
 };
