@@ -22,6 +22,7 @@
 		"underscore": "*"
 	},
 	"devDependencies": {
+		"async": "*",
 		"mocha": "*",
 		"should": "*"
 	}
