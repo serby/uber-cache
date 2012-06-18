@@ -1,4 +1,6 @@
-var should = require('should');
+var should = require('should')
+  , createUberCache = require('../lib/uber-cache').createUberCache
+  ;
 
 function slowFn(callback) {
   setTimeout(callback.bind(null, 10), 30);
@@ -18,7 +20,7 @@ describe('uber-cache', function() {
 
     it('should create a function then when run gives the expected result', function(done) {
 
-      var cache = require('../uber-cache').createUberCache()
+      var cache = createUberCache()
         ;
 
       cache.memoize(giveMeTen, 1000, function(fn) {
@@ -31,7 +33,7 @@ describe('uber-cache', function() {
 
     it('second call should be quick', function(done) {
 
-      var cache = require('../uber-cache').createUberCache()
+      var cache = createUberCache()
         , a = Date.now();
 
       cache.memoize(slowFn, 1000, function(fn) {
@@ -51,7 +53,7 @@ describe('uber-cache', function() {
 
     it('should correctly handle parameters', function(done) {
 
-      var cache = require('../uber-cache').createUberCache()
+      var cache = createUberCache()
       ;
 
       cache.memoize(sum, 1000, function(fn) {
@@ -65,7 +67,7 @@ describe('uber-cache', function() {
 
     it('should create caches for each different combination of parameters ', function() {
 
-      var cache = require('../uber-cache').createUberCache()
+      var cache = createUberCache()
         ;
 
       cache.memoize(sum, 1000, function(fn) {

@@ -7,5 +7,5 @@ require('./engine')('memoryCacheEngine', function(options) {
     gcInterval: 100
   }, options);
 
-  return require('../memoryCacheEngine').createMemoryCacheEngine(options);
+  return require('../lib/memoryCacheEngine').createMemoryCacheEngine(options);
 });
