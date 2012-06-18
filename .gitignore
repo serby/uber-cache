@@ -17,6 +17,3 @@ Icon?
 
 # nodejs npm modules
 /node_modules
-
-# ZSH Cake plugin cache
-/.cake_task_cache
