@@ -16,26 +16,37 @@ module.exports.createUberCache = function(options) {
 
   options.engine = options.engine || require('./memoryCacheEngine').createMemoryCacheEngine(options);
 
-  options.engine.memoize = function(fn, ttl) {
-    var fnKey = '_func' + funcCounter;
-    return function() {
-      var args = Array.prototype.slice.call(arguments)
-        , callback = args.pop()
-        , key = fnKey + hasher.apply(null, args)
-        , value = options.engine.get(key);
+  function memoize(fn, ttl, callback) {
+    var fnKey = '_func' + funcCounter
+      , cachedFn = function() {
+        var args = Array.prototype.slice.call(arguments)
+          , fnCallback = args.pop()
+          , key = fnKey + hasher.apply(null, args)
+          ;
 
-      if (value === undefined) {
-        args.push(function() {
-          var args = Array.prototype.slice.call(arguments);
-          options.engine.set(key, args, ttl);
-          callback.apply(null, args);
-        });
-        fn.apply(null, args);
-      } else {
-        callback.apply(null, value);
-      }
-    };
-  };
+          options.engine.get(key, function(error, value) {
+            if (error) {
+              return fnCallback(error);
+            }
+            if (value === undefined) {
+              args.push(function() {
+                var args = Array.prototype.slice.call(arguments);
+                options.engine.set(key, args, ttl, function(error) {
+                  if (error) {
+                    fnCallback(error);
+                  } else {
+                    fnCallback.apply(undefined, args);
+                  }
+                });
+              });
+              fn.apply(null, args);
+            } else {
+              fnCallback.apply(undefined, value);
+            }
+          });
+      };
+    callback(cachedFn);
+  }
 
   return {
     get: options.engine.get,
@@ -43,6 +54,7 @@ module.exports.createUberCache = function(options) {
     del: options.engine.del,
     clear: options.engine.clear,
     size: options.engine.size,
-    dump: options.engine.dump
+    dump: options.engine.dump,
+    memoize: memoize
   };
 };
