@@ -1,5 +1,5 @@
 var async = require('async')
-  , count = 100000
+  , count = 200000
   ;
 
 function time(fn) {
@@ -84,6 +84,10 @@ module.exports = function(name, engineFactory) {
 
         function delDone(error, value) {
           doneCount += 1;
+
+          // if (doneCount % 10000 === 0) {
+          //   console.log(doneCount);
+          // }
           if (doneCount === count) {
             cache.close();
             done();
