@@ -2,7 +2,7 @@
 , "name": "uber-cache"
 , "description": "Async caching module that can support any caching engine: Memory, Memcached, Redis, MongoDB"
 , "version": "0.0.1"
-  "tags":
+, "tags":
     [ "cache"
     , "memory"
     ]
@@ -14,13 +14,13 @@
 , "scripts":
     { "test": "mocha -r should"
     }
-  "engines":
+, "engines":
     { "node": ">0.4.0"
     }
-  "dependencies":
+, "dependencies":
     { "underscore": "*"
     }
-  "devDependencies":
+, "devDependencies":
     { "async": "*"
     , "mocha": "*"
     , "should": "*"
