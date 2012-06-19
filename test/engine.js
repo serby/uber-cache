@@ -46,7 +46,7 @@ module.exports = function(name, engineFactory) {
               should.equal(value, undefined);
               done();
             });
-          }, 1001);
+          }, 1800);
         });
       });
     });
@@ -113,7 +113,7 @@ module.exports = function(name, engineFactory) {
               size.should.eql(0);
               done();
             });
-          }, 1001);
+          }, 1800);
         });
       });
     });
