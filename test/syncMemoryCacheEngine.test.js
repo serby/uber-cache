@@ -66,7 +66,7 @@ describe('syncMemoryCacheEngine', function() {
     });
   });
 
-  describe('#length', function() {
+  describe('#size', function() {
     it('should return 0 before anything has been added to the cache', function() {
       var memory = createSyncMemoryCacheEngine();
       memory.size().should.eql(0);
@@ -79,13 +79,13 @@ describe('syncMemoryCacheEngine', function() {
     });
 
     it('should return 0 after something added has expired', function(done) {
-      var memory = createSyncMemoryCacheEngine({ gcInterval: 10 });
-      memory.set('test', 'hello', 5);
+      var memory = createSyncMemoryCacheEngine();
+      memory.set('test', 'hello', 1);
       memory.size().should.eql(1);
       setTimeout(function() {
         memory.size().should.eql(0);
         done();
-      }, 15);
+      }, 1001);
     });
 
     it('should not exceed cache size', function() {
