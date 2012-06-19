@@ -1,5 +1,5 @@
 var async = require('async')
-  , count = 200000
+  , count = 100000
   ;
 
 function time(fn) {
