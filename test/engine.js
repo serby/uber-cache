@@ -1,9 +1,35 @@
 var should = require('should')
-  , async = require('async');
+  , async = require('async')
+  , Stream = require('stream');
 
 module.exports = function(name, engineFactory) {
 
   describe(name, function() {
+
+    it('should emit a "miss" event on cache misses', function(done) {
+      var cache = engineFactory();
+
+      cache.on('miss', function(key) {
+        key.should.equal('undefined');
+        done();
+      });
+
+      cache.get('undefined', function(err, value) { });
+    });
+
+    it('should emit an "error" event on errors', function(done) {
+      var cache = engineFactory()
+        , firstError = false;
+
+      cache.once('error', function(err) {
+        err.should.have.property('message', 'Invalid key undefined');
+        done();
+      });
+
+      (function() {
+        cache.get(undefined, '');
+      }).should.throw('Invalid key undefined');
+    });
 
     describe('#get()', function() {
       it('should return undefined for a key that has not been set', function(done) {
@@ -57,6 +83,29 @@ module.exports = function(name, engineFactory) {
         (function() {
           cache.set(undefined, '');
         }).should.throw('Invalid key undefined');
+      });
+      it('should concatenate and save data from Streams', function(done) {
+        var cache = engineFactory()
+          , dummy = new Stream();
+
+        cache.set('a', dummy);
+
+        setTimeout(function() {
+          cache.size(function(err, size) {
+            size.should.equal(0);
+
+            dummy.write(new Buffer([1]));
+            dummy.write(new Buffer([2, 3, 4]));
+            dummy.write(new Buffer([5, 6, 7, 8, 9]));
+            dummy.emit('end');
+
+            cache.get('a', function(err, value) {
+              should.equal(err, null);
+              should.deepEqual(value, new Buffer([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+              done();
+            });
+          });
+        }, 50);
       });
     });
 
