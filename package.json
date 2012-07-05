@@ -19,6 +19,7 @@
     }
 , "dependencies":
     { "underscore": "*"
+    , "ttl-lru-cache": ">= 0.0.2"
     }
 , "devDependencies":
     { "async": "*"
