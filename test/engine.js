@@ -27,7 +27,7 @@ module.exports = function(name, engineFactory) {
       });
 
       (function() {
-        cache.get(undefined, '');
+        cache.set(undefined, '');
       }).should.throw('Invalid key undefined');
     });
 
