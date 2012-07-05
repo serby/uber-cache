@@ -94,9 +94,9 @@ module.exports = function(name, engineFactory) {
           cache.size(function(err, size) {
             size.should.equal(0);
 
-            dummy.write(new Buffer([1]));
-            dummy.write(new Buffer([2, 3, 4]));
-            dummy.write(new Buffer([5, 6, 7, 8, 9]));
+            dummy.emit('data', new Buffer([1]));
+            dummy.emit('data', new Buffer([2, 3, 4]));
+            dummy.emit('data', new Buffer([5, 6, 7, 8, 9]));
             dummy.emit('end');
 
             cache.get('a', function(err, value) {
