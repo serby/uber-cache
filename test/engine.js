@@ -84,28 +84,21 @@ module.exports = function(name, engineFactory) {
           cache.set(undefined, '');
         }).should.throw('Invalid key undefined');
       });
-      it('should concatenate and save data from Streams', function(done) {
+      it('should not allow values that cannot be JSON.stringify\'d', function(done) {
         var cache = engineFactory()
-          , dummy = new Stream();
+          , circular = [];
 
-        cache.set('a', dummy);
+        circular.push(circular);
 
-        setTimeout(function() {
-          cache.size(function(err, size) {
-            size.should.equal(0);
+        cache.set('key', circular, function(err, value) {
+          err.should.be.instanceOf(TypeError);
+          err.should.have.property('message', 'Converting circular structure to JSON');
 
-            dummy.emit('data', new Buffer([1]));
-            dummy.emit('data', new Buffer([2, 3, 4]));
-            dummy.emit('data', new Buffer([5, 6, 7, 8, 9]));
-            dummy.emit('end');
-
-            cache.get('a', function(err, value) {
-              should.equal(err, null);
-              should.deepEqual(value, new Buffer([1, 2, 3, 4, 5, 6, 7, 8, 9]));
-              done();
-            });
+          cache.get('key', function(err, value) {
+            should.equal(value, undefined);
+            done();
           });
-        }, 50);
+        });
       });
     });
 
