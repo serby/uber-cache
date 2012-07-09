@@ -1,9 +1,35 @@
 var should = require('should')
-  , async = require('async');
+  , async = require('async')
+  , Stream = require('stream');
 
 module.exports = function(name, engineFactory) {
 
   describe(name, function() {
+
+    it('should emit a "miss" event on cache misses', function(done) {
+      var cache = engineFactory();
+
+      cache.on('miss', function(key) {
+        key.should.equal('undefined');
+        done();
+      });
+
+      cache.get('undefined', function(err, value) { });
+    });
+
+    it('should emit an "error" event on errors', function(done) {
+      var cache = engineFactory()
+        , firstError = false;
+
+      cache.once('error', function(err) {
+        err.should.have.property('message', 'Invalid key undefined');
+        done();
+      });
+
+      (function() {
+        cache.set(undefined, '');
+      }).should.throw('Invalid key undefined');
+    });
 
     describe('#get()', function() {
       it('should return undefined for a key that has not been set', function(done) {
@@ -57,6 +83,22 @@ module.exports = function(name, engineFactory) {
         (function() {
           cache.set(undefined, '');
         }).should.throw('Invalid key undefined');
+      });
+      it('should not allow values that cannot be JSON.stringify\'d', function(done) {
+        var cache = engineFactory()
+          , circular = [];
+
+        circular.push(circular);
+
+        cache.set('key', circular, function(err, value) {
+          err.should.be.instanceOf(TypeError);
+          err.should.have.property('message', 'Converting circular structure to JSON');
+
+          cache.get('key', function(err, value) {
+            should.equal(value, undefined);
+            done();
+          });
+        });
       });
     });
 
