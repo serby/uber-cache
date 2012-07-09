@@ -18,8 +18,8 @@
     { "node": ">0.4.0"
     }
 , "dependencies":
-    { "underscore": "*"
-    , "ttl-lru-cache": ">= 0.0.2"
+    { "lodash": "*"
+    , "ttl-lru-cache": "~0.0"
     }
 , "devDependencies":
     { "async": "*"

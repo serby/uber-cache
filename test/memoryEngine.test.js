@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require('lodash');
 
 require('./engine')('memoryEngine', function(options) {
 
