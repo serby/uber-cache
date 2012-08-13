@@ -1,5 +1,5 @@
 var should = require('should')
-  , createUberCache = require('../lib/uber-cache').createUberCache
+  , createUberCache = require('..').createUberCache
   ;
 
 function slowFn(callback) {
