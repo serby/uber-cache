@@ -10,7 +10,7 @@
     { "type": "git"
     , "url": "git@github.com:serby/uber-cache"
     }
-, "main": "uber-cache.js"
+, "main": "./lib/uber-cache.js"
 , "scripts":
     { "test": "mocha -r should"
     }
