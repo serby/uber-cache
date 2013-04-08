@@ -1,11 +1,11 @@
 var async = require('async')
-  , _ = require('underscore');
+  , _ = require('underscore')
 
 require('./engine.bench')('memoryCacheEngine', function(options) {
 
   options = _.extend({
     gcInterval: 30000
-  }, options);
+  }, options)
 
-  return require('../lib/memoryCacheEngine')(options);
-});
+  return require('../lib/memoryCacheEngine')(options)
+})

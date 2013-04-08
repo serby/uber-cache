@@ -1,10 +1,10 @@
-var _ = require('lodash');
+var _ = require('lodash')
 
 require('./engine')('memoryEngine', function(options) {
 
   options = _.extend({
     gcInterval: 100
-  }, options);
+  }, options)
 
-  return require('../lib/memoryEngine')(options);
-});
+  return require('../lib/memoryEngine')(options)
+})

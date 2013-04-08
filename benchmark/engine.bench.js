@@ -1,14 +1,14 @@
 var async = require('async')
   , count = 200000
-  ;
+
 
 function time(fn) {
   return function(done) {
-    var start = Date.now();
+    var start = Date.now()
     fn(function() {
-      done(undefined, Date.now() - start);
-    });
-  };
+      done(undefined, Date.now() - start)
+    })
+  }
 }
 
 module.exports = function(name, engineFactory) {
@@ -16,43 +16,43 @@ module.exports = function(name, engineFactory) {
   function populateCache(done) {
     var doneCount = 0
       , cache = engineFactory()
-      ;
 
-    function setDone(error, value) {
-      doneCount += 1;
+
+    function setDone() {
+      doneCount += 1
       if (doneCount === count) {
-        cache.close();
-        done(cache);
+        cache.close()
+        done(cache)
       }
     }
 
     for (var i = 0; i < count; i++) {
-      cache.set('key' + i, i, setDone);
+      cache.set('key' + i, i, setDone)
     }
   }
 
   async.series(
     { '#set()': time(function(done) {
 
-        populateCache(done);
+        populateCache(done)
 
       })
     , '#get() with empty cache': time(function(done) {
 
         var doneCount = 0
           , cache = engineFactory()
-          ;
 
-        function getDone(error, value) {
-          doneCount += 1;
+
+        function getDone() {
+          doneCount += 1
           if (doneCount === count) {
-            cache.close();
-            done();
+            cache.close()
+            done()
           }
         }
 
         for (var i = 0; i < count; i++) {
-          cache.get('key' + i, getDone);
+          cache.get('key' + i, getDone)
         }
 
       })
@@ -60,64 +60,64 @@ module.exports = function(name, engineFactory) {
 
         populateCache(function(cache) {
           var doneCount = 0
-            ;
 
-          function getDone(error, value) {
-            doneCount += 1;
+
+          function getDone() {
+            doneCount += 1
             if (doneCount === count) {
-              cache.close();
-              done();
+              cache.close()
+              done()
             }
           }
 
           for (var i = 0; i < count; i++) {
-            cache.get('key' + i, getDone);
+            cache.get('key' + i, getDone)
           }
-        });
+        })
 
       })
     , '#del()': time(function(done) {
 
         var doneCount = 0
           , cache = engineFactory()
-          ;
 
-        function delDone(error, value) {
-          doneCount += 1;
+
+        function delDone() {
+          doneCount += 1
 
           // if (doneCount % 10000 === 0) {
-          //   console.log(doneCount);
+          //   console.log(doneCount)
           // }
           if (doneCount === count) {
-            cache.close();
-            done();
+            cache.close()
+            done()
           }
         }
 
         function del() {
-          console.log('Del');
+          console.log('Del')
           for (var i = 0; i < count; i++) {
-            cache.del('key' + i, delDone);
+            cache.del('key' + i, delDone)
           }
         }
 
-        function setDone(error, value) {
-          doneCount += 1;
+        function setDone() {
+          doneCount += 1
           if (doneCount === count) {
-            doneCount = 0;
-            del();
+            doneCount = 0
+            del()
           }
         }
 
         for (var i = 0; i < count; i++) {
-          cache.set('key' + i, i, setDone);
+          cache.set('key' + i, i, setDone)
         }
 
       })
     }
     , function(error, times) {
-      console.log('Done', times);
+      console.log('Done', times)
     }
-  );
+  )
 
-};
+}
