@@ -1,29 +1,38 @@
-{ "author": "Paul Serby <paul@serby.net>"
-, "name": "uber-cache"
-, "description": "Async caching module that can support any caching engine: Memory, Memcached, Redis, MongoDB"
-, "version": "0.3.1"
-, "tags":
-    [ "cache"
-    , "memory"
-    ]
-, "repository":
-    { "type": "git"
-    , "url": "git@github.com:serby/uber-cache"
-    }
-, "main": "./lib/uber-cache.js"
-, "scripts":
-    { "test": "mocha -r should"
-    }
-, "engines":
-    { "node": ">0.4.0"
-    }
-, "dependencies":
-    { "lodash": "*"
-    , "ttl-lru-cache": "~0.0"
-    }
-, "devDependencies":
-    { "async": "*"
-    , "mocha": "*"
-    , "should": "*"
-    }
+{
+  "author": "Paul Serby <paul@serby.net>",
+  "name": "uber-cache",
+  "description": "Async caching module that can support any caching engine: Memory, Memcached, Redis, MongoDB, LevelDB",
+  "version": "0.3.1",
+  "tags": [
+    "cache",
+    "memory"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:serby/uber-cache"
+  },
+  "main": "./lib/uber-cache.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/jshint . --reporter=./node_modules/jshint-full-path/index.js",
+    "pretest": "npm run-script lint",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- -R spec -r should",
+    "posttest": "./node_modules/.bin/istanbul check-coverage && rm -rf coverage",
+    "prepublish": "npm test && npm prune"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "lru-cache": "^2.5.0",
+    "async": "^0.2.10"
+  },
+  "devDependencies": {
+    "async": "^0.2.10",
+    "mocha": "1",
+    "should": "3",
+    "jshint-full-path": "^1.1.1",
+    "istanbul": "^0.2.6",
+    "jshint": "^2.4.4"
+  }
 }

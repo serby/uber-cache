@@ -48,7 +48,6 @@ describe('uber-cache', function () {
       })
     })
 
-
     it('should correctly handle parameters', function (done) {
 
       var cache = createUberCache()

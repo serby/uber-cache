@@ -16,19 +16,6 @@ module.exports = function(name, engineFactory) {
       cache.get('undefined', function() { })
     })
 
-    it('should emit an "error" event on errors', function(done) {
-      var cache = engineFactory()
-
-      cache.once('error', function(err) {
-        err.should.have.property('message', 'Invalid key undefined')
-        done()
-      });
-
-      (function() {
-        cache.set(undefined, '')
-      }).should.throwError('Invalid key undefined')
-    })
-
     describe('#get()', function() {
       it('should return undefined for a key that has not been set', function(done) {
         var cache = engineFactory()
@@ -76,11 +63,14 @@ module.exports = function(name, engineFactory) {
     })
 
     describe('#set()', function() {
-      it('should not allow undefined key', function() {
-        var cache = engineFactory();
-        (function() {
-          cache.set(undefined, '')
-        }).should.throwError('Invalid key undefined')
+      it('should not allow undefined key', function(done) {
+        var cache = engineFactory()
+
+        cache.set(undefined, null, function(err) {
+          err.should.have.property('message', 'Invalid key undefined')
+          done()
+        })
+
       })
       it('should not allow values that cannot be JSON.stringify\'d', function(done) {
         var cache = engineFactory()
@@ -146,15 +136,15 @@ module.exports = function(name, engineFactory) {
         })
       })
 
-      it('should return 0 after something added has expired', function(done) {
+      it('should return 0 after clear', function(done) {
         var cache = engineFactory()
         cache.set('test', 'hello', 1, function() {
-          setTimeout(function() {
+          cache.clear(function() {
             cache.size(function(error, size) {
               size.should.eql(0)
               done()
             })
-          }, 1800)
+          })
         })
       })
     })
