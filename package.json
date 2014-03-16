@@ -2,7 +2,7 @@
   "author": "Paul Serby <paul@serby.net>",
   "name": "uber-cache",
   "description": "Async caching module that can support any caching engine: Memory, Memcached, Redis, MongoDB, LevelDB",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "tags": [
     "cache",
     "memory",
