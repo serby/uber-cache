@@ -84,7 +84,7 @@ describe('uber-cache', function () {
 
     })
 
-    it.only('should not make a second call to slow function if already called', function (done) {
+    it('should not make a second call to slow function if already called', function (done) {
 
       function myFn(callback) {
         called.push(i)
