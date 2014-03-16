@@ -5,7 +5,9 @@
   "version": "0.3.1",
   "tags": [
     "cache",
-    "memory"
+    "memory",
+    "ttl",
+    "lru"
   ],
   "repository": {
     "type": "git",
