@@ -83,6 +83,32 @@ describe('uber-cache', function () {
       })
 
     })
+
+    it.only('should not make a second call to slow function if already called', function (done) {
+
+      function myFn(callback) {
+        called.push(i)
+        i += 1
+        setTimeout(callback.bind(null, i), 40)
+      }
+
+      var cache = createUberCache()
+        , fn = cache.memoize('test3', myFn, 1000)
+        , called = []
+        , i = 0
+
+      fn(function(response) {
+        response.should.equal(1)
+      })
+
+      fn(function(response) {
+        response.should.equal(1)
+        called.should.eql([0])
+        done()
+      })
+
+    })
+
   })
 
 })
