@@ -22,7 +22,7 @@
     "prepublish": "npm test && npm prune"
   },
   "engines": {
-    "node": ">=0.8"
+    "node": ">=0.10"
   },
   "dependencies": {
     "lodash": "^2.4.1",
