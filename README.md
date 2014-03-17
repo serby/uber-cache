@@ -47,9 +47,11 @@ cache.get('some-key', function(error, cachedItem) {
 
 ## API
 
+### Functions
+
 * `set(key, value, ttl, callback)`
 
-    **ttl** is optional
+    **ttl** milliseconds until expiry. Optional
 
 * `get(key, callback)`
 * `del(key, callback)`
@@ -60,6 +62,19 @@ cache.get('some-key', function(error, cachedItem) {
     Returns a function that will cache the results of a slow function for **ttl**
     or until **lru** clears it out.
 
+### Events
+
+* `miss(key)`
+
+  Emitted when a `get(key)` fails to find a valid cached item with that key.
+
+* `hit(key, value, ttl)`
+
+  Emitted when a `get(key)` finds a valid item in the cache.
+
+* `stale(key, value, ttl)`
+
+  Emitted when a `get(key)` can’t find a valid item but a stale item still exists.
 
 ## Engines
 
