@@ -60,7 +60,6 @@ cache.get('some-key', function(error, cachedItem) {
     Returns a function that will cache the results of a slow function for **ttl**
     or until **lru** clears it out.
 
-* `close(callback)`
 
 ## Engines
 
