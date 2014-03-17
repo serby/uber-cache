@@ -33,18 +33,40 @@ module.exports = function(name, engineFactory) {
       })
     })
 
-    it('should emit a "miss" event on cache misses', function(done) {
-      var cache = engineFactory()
+    describe('#get()', function() {
 
-      cache.on('miss', function(key) {
-        key.should.equal('undefined')
-        done()
+      it('should emit a "miss" event on cache misses', function(done) {
+        var cache = engineFactory()
+
+        cache.on('miss', function(key) {
+          key.should.equal('undefined')
+          done()
+        })
+
+        cache.get('undefined', function() { })
       })
 
-      cache.get('undefined', function() { })
-    })
+      it('should emit a "stale" on an expired cache', function(done) {
+        var cache = engineFactory()
 
-    describe('#get()', function() {
+        cache.on('stale', function (key, value, ttl) {
+          key.should.equal('abc')
+          value.should.equal('hello')
+          ttl.should.be.below(Date.now())
+          done()
+        })
+
+        cache.set('abc', 'hello', 30, function() {
+          cache.get('abc', function() {
+            setTimeout(function() {
+              cache.get('abc', function(error, value) {
+                should.equal(value, undefined)
+              })
+            }, 50)
+          })
+        })
+      })
+
       it('should return undefined for a key that has not been set', function(done) {
         var cache = engineFactory()
         cache.get('test', function(error, value) {
@@ -52,6 +74,7 @@ module.exports = function(name, engineFactory) {
           done()
         })
       })
+
       it('should return value via callback', function(done) {
         var cache = engineFactory()
         cache.set('test', 'hello', function(error) {
@@ -63,8 +86,8 @@ module.exports = function(name, engineFactory) {
             })
           }, 1000)
         })
-
       })
+
       it('should not return a value for a key that has been cleared', function(done) {
         var cache = engineFactory()
         cache.set('test', 'hello')
@@ -75,6 +98,7 @@ module.exports = function(name, engineFactory) {
           })
         })
       })
+
       it('should return a value when within the TTL', function() {
         var cache = engineFactory()
         cache.set('test', 'hello', 20)
@@ -82,6 +106,7 @@ module.exports = function(name, engineFactory) {
           value.should.eql('hello')
         })
       })
+
       it('should not return when TTL has been exceeded', function(done) {
         var cache = engineFactory()
         cache.set('test2', 'hello', 1, function() {
