@@ -3,6 +3,9 @@
   "name": "uber-cache",
   "description": "Async caching module that can support any caching engine: Memory, Memcached, Redis, MongoDB, LevelDB",
   "version": "1.0.2",
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/"
+  },
   "tags": [
     "cache",
     "memory",
