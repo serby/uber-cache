@@ -5,63 +5,6 @@ module.exports = function(name, engineFactory) {
 
   describe(name, function() {
 
-    it('should emit a "miss" event on cache misses', function(done) {
-      var cache = engineFactory()
-
-      cache.on('miss', function(key) {
-        key.should.equal('undefined')
-        done()
-      })
-
-      cache.get('undefined', function() { })
-    })
-
-    describe('#get()', function() {
-      it('should return undefined for a key that has not been set', function(done) {
-        var cache = engineFactory()
-        cache.get('test', function(error, value) {
-          should.equal(value, undefined)
-          done()
-        })
-      })
-      it('should return value via callback', function(done) {
-        var cache = engineFactory()
-        cache.set('test', 'hello', function() {
-          cache.get('test', function(error, value) {
-            value.should.eql('hello')
-            done()
-          })
-        })
-
-      })
-      it('should not return a value for a key that has been cleared', function() {
-        var cache = engineFactory()
-        cache.set('test', 'hello')
-        cache.del('test')
-        cache.get('test', function(error, value) {
-          should.equal(value, undefined)
-        })
-      })
-      it('should return a value when within the TTL', function() {
-        var cache = engineFactory()
-        cache.set('test', 'hello', 20)
-        cache.get('test', function(error, value) {
-          value.should.eql('hello')
-        })
-      })
-      it('should not return when TTL has been exceeded', function(done) {
-        var cache = engineFactory()
-        cache.set('test2', 'hello', 1, function() {
-          setTimeout(function() {
-            cache.get('test2', function(error, value) {
-              should.equal(value, undefined)
-              done()
-            })
-          }, 1800)
-        })
-      })
-    })
-
     describe('#set()', function() {
       it('should not allow undefined key', function(done) {
         var cache = engineFactory()
@@ -86,6 +29,68 @@ module.exports = function(name, engineFactory) {
             should.equal(value, undefined)
             done()
           })
+        })
+      })
+    })
+
+    it('should emit a "miss" event on cache misses', function(done) {
+      var cache = engineFactory()
+
+      cache.on('miss', function(key) {
+        key.should.equal('undefined')
+        done()
+      })
+
+      cache.get('undefined', function() { })
+    })
+
+    describe('#get()', function() {
+      it('should return undefined for a key that has not been set', function(done) {
+        var cache = engineFactory()
+        cache.get('test', function(error, value) {
+          should.equal(value, undefined)
+          done()
+        })
+      })
+      it('should return value via callback', function(done) {
+        var cache = engineFactory()
+        cache.set('test', 'hello', function(error) {
+          true.should.equal(error === null, error && error.message)
+          setTimeout(function() {
+            cache.get('test', function(error, value) {
+              value.should.eql('hello')
+              done()
+            })
+          }, 1000)
+        })
+
+      })
+      it('should not return a value for a key that has been cleared', function(done) {
+        var cache = engineFactory()
+        cache.set('test', 'hello')
+        cache.del('test', function () {
+          cache.get('test', function(error, value) {
+            should.equal(value, undefined)
+            done()
+          })
+        })
+      })
+      it('should return a value when within the TTL', function() {
+        var cache = engineFactory()
+        cache.set('test', 'hello', 20)
+        cache.get('test', function(error, value) {
+          value.should.eql('hello')
+        })
+      })
+      it('should not return when TTL has been exceeded', function(done) {
+        var cache = engineFactory()
+        cache.set('test2', 'hello', 1, function() {
+          setTimeout(function() {
+            cache.get('test2', function(error, value) {
+              should.equal(value, undefined)
+              done()
+            })
+          }, 1000)
         })
       })
     })
