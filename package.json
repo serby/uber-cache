@@ -30,7 +30,8 @@
   "dependencies": {
     "lodash": "^2.4.1",
     "lru-cache": "^2.5.0",
-    "async": "^0.2.10"
+    "async": "^0.2.10",
+    "semver": "^2.2.1"
   },
   "devDependencies": {
     "async": "^0.2.10",

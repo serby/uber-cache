@@ -15,6 +15,12 @@ function giveMeTen(callback) {
 
 describe('uber-cache', function () {
 
+  it('Should version check the engine', function () {
+    (function () {
+      createUberCache({ engine: { uberCacheVersion: '2' }})
+    }).should.throw('Engine require uber-cache to be match semver 2')
+  })
+
   describe('#memoize()', function () {
 
     it('should create a function then when run gives the expected result', function (done) {

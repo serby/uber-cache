@@ -5,6 +5,10 @@ module.exports = function(name, engineFactory) {
 
   describe(name, function() {
 
+    it('should have a uber-cache compatibility version', function() {
+      engineFactory().uberCacheVersion.should.not.equal(undefined)
+    })
+
     describe('#set()', function() {
       it('should not allow undefined key', function(done) {
         var cache = engineFactory()
