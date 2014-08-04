@@ -28,10 +28,11 @@
     "node": ">=0.10"
   },
   "dependencies": {
+    "async": "^0.2.10",
     "lodash": "^2.4.1",
     "lru-cache": "^2.5.0",
-    "async": "^0.2.10",
-    "semver": "^2.2.1"
+    "semver": "^2.2.1",
+    "sigmund": "^1.0.0"
   },
   "devDependencies": {
     "async": "^0.2.10",
