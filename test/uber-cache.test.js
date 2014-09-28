@@ -115,6 +115,56 @@ describe('uber-cache', function () {
 
     })
 
+    it('should cache a function call with an object as an argument', function (done) {
+
+      var alreadyCalled = false
+
+      function keys(object, cb) {
+        alreadyCalled.should.equal(false)
+        alreadyCalled = true
+        cb(null, Object.keys(object))
+      }
+
+      var cache = createUberCache()
+        , fn = cache.memoize('test5', keys, 1000)
+
+      fn({ a: 1, b: 2, c: 3 }, function (err, keys) {
+        should.not.exist(err)
+        keys.should.eql([ 'a', 'b', 'c' ])
+        fn({ a: 1, b: 2, c: 3 }, function (err, keys) {
+          should.not.exist(err)
+          keys.should.eql([ 'a', 'b', 'c' ])
+          done()
+        })
+      })
+
+    })
+
+    it('should not cache a function call with different objects as arguments', function (done) {
+
+      var times = 0
+
+      function keys(object, cb) {
+        times++
+        cb(null, Object.keys(object))
+      }
+
+      var cache = createUberCache()
+        , fn = cache.memoize('test5', keys, 1000)
+
+      fn({ a: 1, b: 2, c: 3 }, function (err, keys) {
+        should.not.exist(err)
+        keys.should.eql([ 'a', 'b', 'c' ])
+        fn({ a: 3, b: 2, c: 1 }, function (err, keys) {
+          should.not.exist(err)
+          keys.should.eql([ 'a', 'b', 'c' ])
+          times.should.equal(2)
+          done()
+        })
+      })
+
+    })
+
   })
 
 })
