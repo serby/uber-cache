@@ -1,8 +1,8 @@
 {
   "author": "Paul Serby <paul@serby.net>",
   "name": "uber-cache",
-  "description": "Async caching module that can support any caching engine: Memory, Memcached, Redis, MongoDB, LevelDB",
-  "version": "1.3.0",
+  "description": "Async in-memory that sets the interface for a number of uber-* caching engine: Memcached, Redis, MongoDB, LevelDB",
+  "version": "2.0.0",
   "publishConfig": {
     "registry": "http://registry.npmjs.org/"
   },
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git@github.com:serby/uber-cache"
   },
-  "main": "./lib/uber-cache.js",
+  "main": "./uber-cache.js",
   "scripts": {
     "lint": "./node_modules/.bin/jshint . --reporter=./node_modules/jshint-full-path/index.js",
     "pretest": "npm run-script lint",
@@ -28,18 +28,17 @@
     "node": ">=0.10"
   },
   "dependencies": {
-    "async": "^0.2.10",
-    "lodash": "^2.4.1",
+    "async": "^0.9.0",
+    "lodash.assign": "^2.4.1",
     "lru-cache": "^2.5.0",
-    "semver": "^2.2.1",
     "sigmund": "^1.0.0"
   },
   "devDependencies": {
     "async": "^0.2.10",
-    "mocha": "1",
-    "should": "3",
-    "jshint-full-path": "^1.1.1",
     "istanbul": "^0.2.6",
-    "jshint": "^2.4.4"
+    "jshint": "^2.4.4",
+    "jshint-full-path": "^1.1.1",
+    "mocha": "1",
+    "should": "3"
   }
 }

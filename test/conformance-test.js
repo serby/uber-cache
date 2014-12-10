@@ -5,10 +5,6 @@ module.exports = function(name, engineFactory) {
 
   describe(name, function() {
 
-    it('should have a uber-cache compatibility version', function() {
-      engineFactory().uberCacheVersion.should.not.equal(undefined)
-    })
-
     describe('#set()', function() {
       it('should not allow undefined key', function(done) {
         var cache = engineFactory()
@@ -83,19 +79,17 @@ module.exports = function(name, engineFactory) {
         var cache = engineFactory()
         cache.set('test', 'hello', function(error) {
           true.should.equal(error === null, error && error.message)
-          setTimeout(function() {
-            cache.get('test', function(error, value) {
-              value.should.eql('hello')
-              done()
-            })
-          }, 1000)
+          cache.get('test', function(error, value) {
+            value.should.eql('hello')
+            done()
+          })
         })
       })
 
       it('should not return a value for a key that has been cleared', function(done) {
         var cache = engineFactory()
         cache.set('test', 'hello')
-        cache.del('test', function () {
+        cache.delete('test', function () {
           cache.get('test', function(error, value) {
             should.equal(value, undefined)
             done()
@@ -124,31 +118,57 @@ module.exports = function(name, engineFactory) {
       })
     })
 
-    describe('#del()', function() {
+    describe('#delete()', function() {
+
       it('should not error if key does not exist', function() {
         var cache = engineFactory()
-        cache.del('')
+        cache.delete('')
       })
+
       it('should reduce size of cache', function(done) {
         var cache = engineFactory()
-        async.series([
-          async.apply(cache.set, 'a', 1),
-          function(cb) {
-            cache.size(function(error, size) {
-              size.should.eql(1)
-              cb()
-            })
-          },
-          async.apply(cache.del, 'a'),
-          function(cb) {
-            cache.size(function(error, size) {
-              size.should.eql(0)
-              cb()
-            })
-          }
+        async.series(
+          [ cache.set.bind(cache, 'a', 1)
+          , function(cb) {
+              cache.size(function(error, size) {
+                size.should.eql(1)
+                cb()
+              })
+            }
+          , cache.delete.bind(cache, 'a')
+          , function(cb) {
+              cache.size(function(error, size) {
+                size.should.eql(0)
+                cb()
+              })
+            }
         ], function() {
           done()
         })
+      })
+
+      it('should emit a "delete" on delete', function(done) {
+        var cache = engineFactory()
+
+        cache.on('delete', function (key) {
+          key.should.equal('jim')
+          done()
+        })
+
+        cache.delete('jim')
+      })
+
+    })
+
+    describe('#clear()', function() {
+      it('should emit a "clear" on clear', function(done) {
+        var cache = engineFactory()
+
+        cache.on('clear', function () {
+          done()
+        })
+
+        cache.clear()
       })
     })
 
