@@ -1,4 +1,4 @@
-# uber-cache - Async caching module that supports any caching backend.
+# uber-cache - Async caching module with compatible backend options
 
 [![build status](https://secure.travis-ci.org/serby/uber-cache.png)](http://travis-ci.org/serby/uber-cache)
 
@@ -15,14 +15,13 @@ changing the interface in your application.
 
 ## Usage
 
-Most of the useful caching engines have a async interface due to the evented IO
-required so it is necessary to use a callback style when manipulating the cache.
+An async interface due to the evented IO of the storage engines so it is
+necessary to use a callback style when manipulating the cache.
 
 ```js
 
 var ttlInSeconds = 1
   , someData = { some: 'data' }
-  ;
 
 cache.set('some-key', someData, ttlInSeconds, function(error, cachedItem) {
   if (error) {
@@ -54,13 +53,10 @@ cache.get('some-key', function(error, cachedItem) {
     **ttl** milliseconds until expiry. Optional
 
 * `get(key, callback)`
-* `del(key, callback)`
+* `delete(key, callback)`
 * `clear(callback)`
 * `size(callback)`
-* `memoize(id, fn, ttl)`
-
-    Returns a function that will cache the results of a slow function for **ttl**
-    or until **lru** clears it out.
+* `dump(callback)`
 
 ### Events
 
@@ -81,17 +77,16 @@ cache.get('some-key', function(error, cachedItem) {
 The uber-cache engines are decoupled from the main project. Unlike other modules
 that force you to install dependencies for things you not going to use, Uber
 Cache engines are self contained modules that you also include into your project
-and pass to Uber Cache on instantiation.
+that all have the same interface as this module.
 
 Currently the following engines are available:
 
-* Memory - This special case is the base class of cache and is included in the main module. This stores your cache in the memory of the current process. This is suitable for small applications but may cause cache invalidation problems if you start using cluster.
-* Redis - http://github.com/serby/uber-cache-redis - Redis backed cache. TTL can't be less than 1 second due to a limitation in redis TTL.
-* MongoDB - http://github.com/serby/uber-cache-mongodb - MongoDB backed cache.
-* LevelDB - http://github.com/serby/uber-cache-leveldb - LevelDB backed cache.
+* MongoDB - http://github.com/serby/uber-cache-mongodb - MongoDB backed cache
+* Redis - http://github.com/serby/uber-cache-redis - Redis backed cache
+* LevelDB - http://github.com/serby/uber-cache-leveldb - LevelDB backed cache
 
 ## Credits
 [Paul Serby](https://github.com/serby/) follow me on [twitter](http://twitter.com/serby)
 
-## Licence
-Licenced under the [New BSD License](http://opensource.org/licenses/bsd-license.php)
+## License
+Licensed under the [New BSD License](http://opensource.org/licenses/bsd-license.php)
