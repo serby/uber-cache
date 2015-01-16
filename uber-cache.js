@@ -82,10 +82,6 @@ UberCache.prototype.get = function get(key, callback) {
   callback(null, value)
 }
 
-UberCache.prototype.del = function() {
-  throw new Error('".del()" is no longer supported please use ".delete()"')
-}
-
 UberCache.prototype.delete = function(key, callback) {
   this.cache.del(key)
   this.emit('delete', key)
