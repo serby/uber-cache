@@ -3,6 +3,7 @@ module.exports = UberCache
 var EventEmitter = require('events').EventEmitter
   , lruCache = require('lru-cache')
   , extend = require('lodash.assign')
+  , through = require('through')
 
 // V8 prefers predictable objects
 function CachePacket(ttl, data) {
@@ -24,7 +25,6 @@ function UberCache(options) {
 UberCache.prototype = Object.create(EventEmitter.prototype)
 
 UberCache.prototype.set = function(key, value, ttl, callback) {
-  var encoded
 
   // If no TTL is defined then last as long as possible
   if (typeof ttl === 'function') {
@@ -36,18 +36,23 @@ UberCache.prototype.set = function(key, value, ttl, callback) {
   if (typeof key === 'undefined') {
     return callback(new Error('Invalid key undefined'))
   }
-
-  // Encode so object is immutable
   try {
-    encoded = JSON.stringify(value)
-  } catch (err) {
-    if (typeof callback === 'function') {
-      callback(err)
+    if ((value === undefined) && (callback === undefined)) {
+      value = ''
+      return through(function write(data) {
+          value += data
+          this.queue(data)
+        }
+        ).on('end', (function () {
+            var encoded = JSON.stringify(value)
+            this.cache.set(key, new CachePacket(ttl, encoded))
+          }).bind(this))
     }
-    return
+    var encoded = JSON.stringify(value)
+    this.cache.set(key, new CachePacket(ttl, encoded))
+  } catch (e) {
+    return callback(e)
   }
-
-  this.cache.set(key, new CachePacket(ttl, encoded))
 
   if (typeof callback === 'function') {
     callback(null, value)

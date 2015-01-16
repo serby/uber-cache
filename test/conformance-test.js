@@ -1,5 +1,8 @@
 var should = require('should')
   , async = require('async')
+  , assert = require('assert')
+  ,Stream = require('stream').Stream
+  , streamAssert = require('stream-assert')
 
 module.exports = function(name, engineFactory) {
 
@@ -30,6 +33,28 @@ module.exports = function(name, engineFactory) {
             done()
           })
         })
+      })
+
+      it('should return a WriteStream without data or callback', function(done) {
+        var cache = engineFactory()
+          , cacheStream = cache.set('key')
+
+        assert.ok(cacheStream instanceof Stream, 'should be a Stream')
+
+        cacheStream
+          .pipe(streamAssert.first(function(data) { assert.equal(data, 'hello') }))
+          .pipe(streamAssert.second(function(data) { assert.equal(data, 'world') }))
+          .end(function() {
+            cache.get('key', function(err, data) {
+                assert.equal(data, 'helloworld')
+                done()
+              })
+            })
+
+        cacheStream.write('hello')
+        cacheStream.write('world')
+        cacheStream.end()
+
       })
     })
 
