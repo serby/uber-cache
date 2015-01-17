@@ -1,5 +1,5 @@
 var UberCache = require('../uber-cache')
 
-require('./conformance-test')('memory-engine', function(options) {
+require('./conformance-test')('uber-cache', function(options) {
   return new UberCache(options)
 })

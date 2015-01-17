@@ -9,7 +9,7 @@ var EventEmitter = require('events').EventEmitter
 function CachePacket(ttl, data) {
   if (ttl) {
     ttl += Date.now()
-  }
+  } else ttl = null
   this.ttl = ttl
   this.data = data
 }
@@ -82,7 +82,7 @@ UberCache.prototype.get = function get(key, callback) {
   }
 
   // If ttl has expired, delete
-  if (cachePacket.ttl < Date.now()) {
+  if (cachePacket.ttl && cachePacket.ttl < Date.now()) {
     this.cache.del(key)
     this.emit('miss', key)
     this.emit('stale', key, value, cachePacket.ttl)

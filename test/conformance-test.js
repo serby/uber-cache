@@ -18,7 +18,30 @@ module.exports = function(name, engineFactory) {
         })
 
       })
-      it('should not allow values that cannot be JSON.stringify\'d', function(done) {
+
+      it('should allow primitives to be set', function(done) {
+        var cache = engineFactory()
+
+        cache.set('key', 'hello', function(err, value) {
+          assert.ok(!err)
+          assert.equal(value, 'hello')
+          done()
+        })
+
+      })
+
+      it('should allow objects to be set', function(done) {
+        var cache = engineFactory()
+
+        cache.set('key', { a: 1 }, function(err, value) {
+          assert.ok(!err)
+          assert.deepEqual(value, { a: 1 })
+          done()
+        })
+
+      })
+
+      it('should not allow circular objects', function(done) {
         var cache = engineFactory()
           , circular = []
 
@@ -30,10 +53,11 @@ module.exports = function(name, engineFactory) {
 
           cache.get('key', function(err, value) {
             should.equal(value, undefined)
-            done()
+            done(err)
           })
         })
       })
+
       describe('Streaming Interface', function() {
 
         it('should return a WriteStream without data or callback', function() {
@@ -155,22 +179,25 @@ module.exports = function(name, engineFactory) {
         })
       })
 
-      it('should not return a value for a key that has been cleared', function(done) {
+      it('should not return a value for a key that has been deleted', function(done) {
         var cache = engineFactory()
-        cache.set('test', 'hello')
-        cache.delete('test', function () {
-          cache.get('test', function(error, value) {
-            should.equal(value, undefined)
-            done()
+        cache.set('test', 'hello', function() {
+          cache.delete('test', function () {
+            cache.get('test', function(error, value) {
+              should.equal(value, undefined)
+              done()
+            })
           })
         })
       })
 
-      it('should return a value when within the TTL', function() {
+      it('should return a value when within the TTL', function(done) {
         var cache = engineFactory()
-        cache.set('test', 'hello', 20)
-        cache.get('test', function(error, value) {
-          value.should.eql('hello')
+        cache.set('test', 'hello', 200, function() {
+          cache.get('test', function(error, value) {
+            value.should.eql('hello')
+            done()
+          })
         })
       })
 
@@ -233,7 +260,7 @@ module.exports = function(name, engineFactory) {
       it('should emit a "clear" on clear', function(done) {
         var cache = engineFactory()
 
-        cache.on('clear', function () {
+        cache.once('clear', function () {
           done()
         })
 
