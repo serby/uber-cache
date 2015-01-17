@@ -100,16 +100,16 @@ UberCache.prototype.delete = function(key, callback) {
   if (typeof callback === 'function') callback(null)
 }
 
-UberCache.prototype.clear = function clear(callback) {
+UberCache.prototype.clear = function(callback) {
   this.cache.reset()
   this.emit('clear')
   if (typeof callback === 'function') callback(null)
 }
 
-UberCache.prototype.size = function size(callback) {
+UberCache.prototype.size = function(callback) {
   callback(null, this.cache.length)
 }
 
-UberCache.prototype.dump = function dump(callback) {
+UberCache.prototype.dump = function(callback) {
   callback(null, this.cache.dump())
 }
