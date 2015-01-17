@@ -26,6 +26,7 @@ UberCache.prototype = Object.create(EventEmitter.prototype)
 
 UberCache.prototype.set = function(key, value, ttl, callback) {
 
+  var stream
   // If no TTL is defined then last as long as possible
   if (typeof ttl === 'function') {
     callback = ttl
@@ -36,22 +37,28 @@ UberCache.prototype.set = function(key, value, ttl, callback) {
   if (typeof key === 'undefined') {
     return callback(new Error('Invalid key undefined'))
   }
-  try {
-    if ((value === undefined) && (callback === undefined)) {
-      value = ''
-      return through(function write(data) {
-          value += data
-          this.queue(data)
+
+  if ((value === undefined) && (callback === undefined)) {
+    value = []
+    return stream = through(function write(data) {
+        value.push(data)
+        this.queue(data)
+      }
+      ).on('end', (function () {
+        try {
+          var encoded = JSON.stringify(value)
+          this.cache.set(key, new CachePacket(ttl, encoded))
+        } catch (e) {
+          stream.emit('error', e)
         }
-        ).on('end', (function () {
-            var encoded = JSON.stringify(value)
-            this.cache.set(key, new CachePacket(ttl, encoded))
-          }).bind(this))
-    }
+        }).bind(this))
+  }
+
+  try {
     var encoded = JSON.stringify(value)
     this.cache.set(key, new CachePacket(ttl, encoded))
   } catch (e) {
-    return callback(e)
+    if (callback) return callback(e)
   }
 
   if (typeof callback === 'function') {

@@ -34,28 +34,72 @@ module.exports = function(name, engineFactory) {
           })
         })
       })
+      describe('Streaming Interface', function() {
 
-      it('should return a WriteStream without data or callback', function(done) {
-        var cache = engineFactory()
-          , cacheStream = cache.set('key')
+        it('should return a WriteStream without data or callback', function() {
+          var cache = engineFactory()
+            , cacheStream = cache.set('key')
 
-        assert.ok(cacheStream instanceof Stream, 'should be a Stream')
+          assert.ok(cacheStream instanceof Stream, 'should be a Stream')
 
-        cacheStream
-          .pipe(streamAssert.first(function(data) { assert.equal(data, 'hello') }))
-          .pipe(streamAssert.second(function(data) { assert.equal(data, 'world') }))
-          .end(function() {
-            cache.get('key', function(err, data) {
-                assert.equal(data, 'helloworld')
+        })
+
+        it('should allow primitives to be sent to WriteStream', function(done) {
+          var cache = engineFactory()
+            , cacheStream = cache.set('key')
+
+          cacheStream
+            .pipe(streamAssert.first(function(data) { assert.equal(data, 'hello') }))
+            .pipe(streamAssert.second(function(data) { assert.equal(data, 'world') }))
+            .end(function() {
+              cache.get('key', function(err, data) {
+                assert.deepEqual(data, [ 'hello', 'world' ])
                 done()
               })
             })
 
-        cacheStream.write('hello')
-        cacheStream.write('world')
-        cacheStream.end()
+          cacheStream.write('hello')
+          cacheStream.write('world')
+          cacheStream.end()
+        })
+
+        it('should allow objects to set to WriteStream', function(done) {
+          var cache = engineFactory()
+            , cacheStream = cache.set('key')
+
+          cacheStream
+            .pipe(streamAssert.first(function(data) { assert.equal(data, 'hello') }))
+            .pipe(streamAssert.second(function(data) { assert.equal(data, 'world') }))
+            .end(function() {
+              cache.get('key', function(err, data) {
+                assert.deepEqual(data, [ { a: 1 }, { b: 2 } ])
+                done()
+              })
+            })
+
+          cacheStream.write({ a: 1 })
+          cacheStream.write({ b: 2 })
+          cacheStream.end()
+        })
+
+        it('should error if given circular objects', function(done) {
+          var cache = engineFactory()
+            , cacheStream = cache.set('key')
+            , circular = []
+
+          circular.push(circular)
+
+          cacheStream.on('error', function(error) {
+            assert.equal(error.message, 'Converting circular structure to JSON')
+            done()
+          })
+
+          cacheStream.write(circular)
+          cacheStream.end()
+        })
 
       })
+
     })
 
     describe('#get()', function() {

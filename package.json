@@ -18,11 +18,11 @@
   },
   "main": "./uber-cache.js",
   "scripts": {
-    "lint": "./node_modules/.bin/jshint . --reporter=./node_modules/jshint-full-path/index.js",
+    "lint": "jshint . --reporter=./node_modules/jshint-full-path/index.js",
     "pretest": "npm run-script lint",
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- -R spec -r should",
-    "posttest": "./node_modules/.bin/istanbul check-coverage && rm -rf coverage",
-    "prepublish": "npm test && npm prune"
+    "bench": "node benchmark/uber-cache.bench",
+    "test": "istanbul cover ./node_modules/.bin/_mocha -- -R spec -r should",
+    "posttest": "istanbul check-coverage && rm -rf coverage"
   },
   "engines": {
     "node": ">=0.10"
