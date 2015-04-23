@@ -51,7 +51,7 @@ UberCache.prototype.set = function(key, value, ttl, callback) {
         } catch (e) {
           stream.emit('error', e)
         }
-        }).bind(this))
+      }).bind(this))
   }
 
   try {

@@ -192,8 +192,9 @@ module.exports = function(name, engineFactory) {
       })
 
       it('should return a value when within the TTL', function(done) {
+        this.timeout(1500)
         var cache = engineFactory()
-        cache.set('test', 'hello', 200, function() {
+        cache.set('test', 'hello', 1000, function() {
           cache.get('test', function(error, value) {
             value.should.eql('hello')
             done()
