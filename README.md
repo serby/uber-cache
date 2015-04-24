@@ -1,6 +1,7 @@
 # uber-cache - Async caching module with compatible backend options
 
 [![build status](https://secure.travis-ci.org/serby/uber-cache.png)](http://travis-ci.org/serby/uber-cache)
+[![dependency status](https://david-dm.org/serby/uber-cache.svg)](https://david-dm.org/serby/uber-cache)
 
 Uber Cache ensures you have a consistent cache interface regardless of the
 caching engine. All caching engines support
