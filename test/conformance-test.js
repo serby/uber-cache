@@ -139,6 +139,16 @@ module.exports = function(name, engineFactory) {
         cache.get('undefined', function() { })
       })
 
+      it('should return undefined on cache miss', function(done) {
+        var cache = engineFactory()
+
+        cache.get('undefined', function (err, value) {
+          assert.strictEqual(err, null, 'err should be null')
+          assert.strictEqual(value, undefined, 'value should be undefined')
+          done()
+        })
+      })
+
       it('should emit a "stale" on an expired cache', function(done) {
         var cache = engineFactory()
 

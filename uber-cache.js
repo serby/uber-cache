@@ -72,7 +72,7 @@ UberCache.prototype.get = function get(key, callback) {
 
   if (typeof cachePacket === 'undefined') {
     this.emit('miss', key)
-    return callback()
+    return callback(null)
   }
 
   try {
