@@ -3,6 +3,9 @@
 # Windows
 Thumbs.db
 
+# Idea
+.idea
+
 # Vim
 .*.sw[a-z]
 *.un~i
