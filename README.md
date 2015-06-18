@@ -21,10 +21,10 @@ necessary to use a callback style when manipulating the cache.
 
 ```js
 
-var ttlInSeconds = 1
+var ttlInMilliseconds = 1
   , someData = { some: 'data' }
 
-cache.set('some-key', someData, ttlInSeconds, function(error, cachedItem) {
+cache.set('some-key', someData, ttlInMilliseconds, function(error, cachedItem) {
   if (error) {
     // Handle the error
     return false
