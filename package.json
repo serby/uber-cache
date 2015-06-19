@@ -2,7 +2,7 @@
   "author": "Paul Serby <paul@serby.net>",
   "name": "uber-cache",
   "description": "Async in-memory that sets the interface for a number of uber-* caching engine: Memcached, Redis, MongoDB, LevelDB",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "publishConfig": {
     "registry": "http://registry.npmjs.org/"
   },
