@@ -4,6 +4,10 @@ var should = require('should')
   ,Stream = require('stream').Stream
   , streamAssert = require('stream-assert')
 
+function noop() {
+
+}
+
 module.exports = function(name, engineFactory) {
 
   describe(name, function() {
@@ -197,7 +201,7 @@ module.exports = function(name, engineFactory) {
         })
         cache.set('test', 'hello', function(error) {
           true.should.equal(error === null, error && error.message)
-          cache.get('test')
+          cache.get('test', noop)
         })
       })
 
