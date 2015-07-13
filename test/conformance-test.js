@@ -189,6 +189,18 @@ module.exports = function(name, engineFactory) {
         })
       })
 
+      it('should emit a “hit” when data is in cache', function(done) {
+        var cache = engineFactory()
+        cache.on('hit', function(key) {
+          key.should.equal('test')
+          done()
+        })
+        cache.set('test', 'hello', function(error) {
+          true.should.equal(error === null, error && error.message)
+          cache.get('test')
+        })
+      })
+
       it('should not return a value for a key that has been deleted', function(done) {
         var cache = engineFactory()
         cache.set('test', 'hello', function() {
