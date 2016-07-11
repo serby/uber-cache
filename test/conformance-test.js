@@ -1,7 +1,7 @@
 var should = require('should')
   , async = require('async')
   , assert = require('assert')
-  ,Stream = require('stream').Stream
+  , Stream = require('stream').Stream
   , streamAssert = require('stream-assert')
 
 function noop() {
@@ -29,6 +29,32 @@ module.exports = function(name, engineFactory) {
         cache.set('key', 'hello', function(err, value) {
           assert.ok(!err)
           assert.equal(value, 'hello')
+          done()
+        })
+
+      })
+
+      it('should treat keys with spaces and keys with _ differently', function (done) {
+        var cache = engineFactory()
+          , tasks =
+              { setKeyWithSpace: function (cb) {
+                  cache.set('key key', 'hello one', cb)
+                }
+              , setKeyWithDelimiter: function (cb) {
+                  cache.set('key_key', 'hello two', cb)
+                }
+              , getKeyWithSpace: function (cb) {
+                  cache.get('key key', cb)
+                }
+              , getKeyWithDelimiter: function (cb) {
+                  cache.get('key_key', cb)
+                }
+              }
+
+        async.series(tasks, function (err, results) {
+          assert.ok(!err)
+          assert.equal(results.getKeyWithSpace, 'hello one')
+          assert.equal(results.getKeyWithDelimiter, 'hello two')
           done()
         })
 
