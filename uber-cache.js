@@ -25,6 +25,7 @@ function UberCache(options) {
 UberCache.prototype = Object.create(EventEmitter.prototype)
 
 UberCache.prototype.set = function(key, value, ttl, callback) {
+  /* jshint maxcomplexity: 7 */
 
   var stream
   // If no TTL is defined then last as long as possible
