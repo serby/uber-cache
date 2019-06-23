@@ -28,17 +28,17 @@
     "node": ">=0.10"
   },
   "dependencies": {
-    "async": "^1.5.2",
+    "async": "^3.1.0",
     "lodash.assign": "^4.0.9",
-    "lru-cache": "^4.0.1",
+    "lru-cache": "^5.1.1",
     "through": "^2.3.8"
   },
   "devDependencies": {
     "istanbul": "^0.4.4",
     "jshint": "^2.9.2",
     "jshint-full-path": "^1.1.1",
-    "mocha": "^2.5.3",
-    "should": "^9.0.2",
+    "mocha": "^6.1.4",
+    "should": "^13.2.3",
     "stream-assert": "^2.0.3"
   }
 }
