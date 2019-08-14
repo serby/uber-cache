@@ -21,3 +21,6 @@ Icon?
 # nodejs npm modules
 /node_modules
 coverage
+
+# NYC
+.nyc_output
