@@ -1,9 +1,9 @@
 module.exports = UberCache
 
 var EventEmitter = require('events').EventEmitter
-  , lruCache = require('lru-cache')
-  , extend = require('lodash.assign')
-  , through = require('through')
+var LruCache = require('lru-cache')
+var extend = require('lodash.assign')
+var through = require('through')
 
 // V8 prefers predictable objects
 function CachePacket(ttl, data) {
@@ -15,11 +15,9 @@ function CachePacket(ttl, data) {
 }
 
 function UberCache(options) {
-  this.options = extend(
-    { size: 5000 }
-    , options)
+  this.options = extend({ size: 5000 }, options)
 
-  this.cache = lruCache(this.options.size)
+  this.cache = new LruCache(this.options.size)
 }
 
 UberCache.prototype = Object.create(EventEmitter.prototype)
@@ -39,20 +37,22 @@ UberCache.prototype.set = function(key, value, ttl, callback) {
     return callback(new Error('Invalid key undefined'))
   }
 
-  if ((value === undefined) && (callback === undefined)) {
+  if (value === undefined && callback === undefined) {
     value = []
-    return stream = through(function write(data) {
-        value.push(data)
-        this.queue(data)
-      }
-      ).on('end', (function () {
+    return (stream = through(function write(data) {
+      value.push(data)
+      this.queue(data)
+    }).on(
+      'end',
+      function() {
         try {
           var encoded = JSON.stringify(value)
           this.cache.set(key, new CachePacket(ttl, encoded))
         } catch (e) {
           stream.emit('error', e)
         }
-      }).bind(this))
+      }.bind(this)
+    ))
   }
 
   try {
@@ -69,7 +69,7 @@ UberCache.prototype.set = function(key, value, ttl, callback) {
 
 UberCache.prototype.get = function get(key, callback) {
   var value
-    , cachePacket = this.cache.get(key)
+  var cachePacket = this.cache.get(key)
 
   if (typeof cachePacket === 'undefined') {
     this.emit('miss', key)

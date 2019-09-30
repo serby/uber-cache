@@ -1,7 +1,7 @@
 var async = require('async')
-  , count = 200000
-  , primitiveCache
-  , complexCache
+var count = 200000
+var primitiveCache
+var complexCache
 
 function time(fn) {
   return function(done) {
@@ -13,10 +13,9 @@ function time(fn) {
 }
 
 module.exports = function(name, engineFactory) {
-
   function populateCachePrimitiveData(done) {
     var doneCount = 0
-      , cache = engineFactory()
+    var cache = engineFactory()
 
     function setDone() {
       doneCount += 1
@@ -32,7 +31,7 @@ module.exports = function(name, engineFactory) {
 
   function populateCacheComplexData(done) {
     var doneCount = 0
-      , cache = engineFactory()
+    var cache = engineFactory()
 
     function setDone() {
       doneCount += 1
@@ -47,26 +46,22 @@ module.exports = function(name, engineFactory) {
   }
 
   async.series(
-    { 'cache.set() with primitive data': time(function(done) {
-
+    {
+      'cache.set() with primitive data': time(function(done) {
         populateCachePrimitiveData(function(cache) {
           primitiveCache = cache
           done()
         })
-
-      })
-    , 'cache.set() with object data': time(function(done) {
-
+      }),
+      'cache.set() with object data': time(function(done) {
         populateCacheComplexData(function(cache) {
           complexCache = cache
           done()
         })
-
-      })
-    , 'cache.get() with empty cache': time(function(done) {
-
+      }),
+      'cache.get() with empty cache': time(function(done) {
         var doneCount = 0
-          , cache = engineFactory()
+        var cache = engineFactory()
 
         function getDone() {
           doneCount += 1
@@ -78,10 +73,8 @@ module.exports = function(name, engineFactory) {
         for (var i = 0; i < count; i++) {
           cache.get('key' + i, getDone)
         }
-
-      })
-    , 'cache.get() with populated cache': time(function(done) {
-
+      }),
+      'cache.get() with populated cache': time(function(done) {
         var doneCount = 0
 
         function getDone() {
@@ -94,10 +87,8 @@ module.exports = function(name, engineFactory) {
         for (var i = 0; i < count; i++) {
           primitiveCache.get('key' + i, getDone)
         }
-
-      })
-    , 'cache.get() with populated cache and complex data': time(function(done) {
-
+      }),
+      'cache.get() with populated cache and complex data': time(function(done) {
         var doneCount = 0
 
         function getDone() {
@@ -110,12 +101,10 @@ module.exports = function(name, engineFactory) {
         for (var i = 0; i < count; i++) {
           complexCache.get('key' + i, getDone)
         }
-
-      })
-    , 'cache.delete()': time(function(done) {
-
+      }),
+      'cache.delete()': time(function(done) {
         var doneCount = 0
-          , cache = engineFactory()
+        var cache = engineFactory()
 
         function delDone() {
           doneCount += 1
@@ -142,10 +131,9 @@ module.exports = function(name, engineFactory) {
         for (var i = 0; i < count; i++) {
           cache.set('key' + i, i, setDone)
         }
-
       })
-    }
-    , function(error, times) {
+    },
+    function(ignoreError, times) {
       console.log('\nOperation count: ' + count)
       Object.keys(times).forEach(function(key) {
         console.log(rightPad(times[key]) + 'ms ' + key)
@@ -153,7 +141,6 @@ module.exports = function(name, engineFactory) {
       console.log('\n')
     }
   )
-
 }
 
 function rightPad(value) {
