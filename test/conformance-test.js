@@ -362,13 +362,15 @@ module.exports = function(name, engineFactory) {
         })
       })
 
-      it('should return 0 after clear', function(done) {
+      it('should be smaller after clear', function(done) {
         var cache = engineFactory()
         cache.set('test', 'hello', 1, function() {
-          cache.clear(function() {
-            cache.size(function(ignoreError, size) {
-              size.should.eql(0)
-              done()
+          cache.size(function(ignoreError, originalSize) {
+            cache.clear(function() {
+              cache.size(function(ignoreError, size) {
+                assert(originalSize > size)
+                done()
+              })
             })
           })
         })
