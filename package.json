@@ -17,7 +17,8 @@
     "url": "git@github.com:serby/uber-cache"
   },
   "files": [
-    "uber-cache.js"
+    "uber-cache.js",
+    "test/conformance-test.js"
   ],
   "main": "./uber-cache.js",
   "scripts": {
