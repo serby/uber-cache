@@ -361,20 +361,6 @@ module.exports = function(name, engineFactory) {
           })
         })
       })
-
-      it('should be smaller after clear', function(done) {
-        var cache = engineFactory()
-        cache.set('test', 'hello', 1, function() {
-          cache.size(function(ignoreError, originalSize) {
-            cache.clear(function() {
-              cache.size(function(ignoreError, size) {
-                assert(originalSize > size)
-                done()
-              })
-            })
-          })
-        })
-      })
     })
   })
 }
