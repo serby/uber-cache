@@ -16,6 +16,9 @@
     "type": "git",
     "url": "git@github.com:serby/uber-cache"
   },
+  "files": [
+    "uber-cache.js"
+  ],
   "main": "./uber-cache.js",
   "scripts": {
     "lint": "eslint -f unix .",

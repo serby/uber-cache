@@ -38,15 +38,21 @@ UberCache.prototype.set = function(key, value, ttl, callback) {
   }
 
   if (value === undefined && callback === undefined) {
-    value = []
+    var bufferValue = []
     return (stream = through(function write(data) {
-      value.push(data)
+      bufferValue.push(data)
       this.queue(data)
     }).on(
       'end',
       function() {
         try {
-          var encoded = JSON.stringify(value)
+          var encoded = JSON.stringify(bufferValue)
+          this.emit('set', {
+            key,
+            ttl,
+            value: bufferValue,
+            length: encoded.length
+          })
           this.cache.set(key, new CachePacket(ttl, encoded))
         } catch (e) {
           stream.emit('error', e)
@@ -57,6 +63,12 @@ UberCache.prototype.set = function(key, value, ttl, callback) {
 
   try {
     var encoded = JSON.stringify(value)
+    this.emit('set', {
+      key,
+      ttl,
+      value,
+      length: encoded.length
+    })
     this.cache.set(key, new CachePacket(ttl, encoded))
   } catch (e) {
     if (callback) return callback(e)

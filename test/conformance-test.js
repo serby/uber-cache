@@ -164,6 +164,19 @@ module.exports = function(name, engineFactory) {
           cacheStream.end()
         })
       })
+      it('should emit a "set" event', function(done) {
+        var cache = engineFactory()
+
+        cache.on('set', function({ key, value, ttl, length }) {
+          assert.strictEqual(key, 'foo')
+          assert.strictEqual(value, 'bar')
+          assert.strictEqual(ttl, 1000)
+          assert.strictEqual(typeof length, 'number')
+          assert(length > 3)
+          done()
+        })
+        cache.set('foo', 'bar', 1000, function() {})
+      })
     })
 
     describe('#get()', function() {
